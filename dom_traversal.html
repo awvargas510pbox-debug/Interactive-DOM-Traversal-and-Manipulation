@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Interactive DOM Traversal</title>
+
+<style>
+body 
+{
+  font-family: Arial, sans-serif;
+  background-color: orange;
+  margin: 0;
+}
+
+/* HEADER */
+.header 
+{
+  background-color: black;
+  color: white;
+  padding: 20px;
+  margin: 20px;
+}
+
+/* SECTIONS */
+.section 
+{
+  background-color: orange;
+  border: 2px solid gray;
+  padding: 20px;
+  margin: 20px;
+}
+
+/* TREE */
+.grandparent 
+{
+  background: lightblue;
+  padding: 15px;
+}
+
+.parent 
+{
+  background: lightgreen;
+  margin: 10px;
+  padding: 10px;
+}
+
+.child 
+{
+  background: lightcoral;
+  margin: 5px;
+  padding: 5px;
+}
+
+/* HIGHLIGHT */
+.highlight 
+{
+  border: 3px solid black;
+}
+
+/* BUTTONS */
+.buttons 
+{
+  margin-bottom: 15px;
+}
+
+button 
+{
+  padding: 10px;
+  margin: 5px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.nav-btn 
+{
+  background-color: gray;
+  color: white;
+}
+
+.add-btn 
+{
+  background-color: lightgreen;
+  color: black;
+}
+
+.delete-btn 
+{
+  background-color: lightcoral;
+  color: black;
+}
+
+button:hover 
+{
+  opacity: 0.8;
+}
+</style>
+
+</head>
+<body>
+
+<div class="header">
+  <h2>Student Profile</h2>
+  <p>Name:  Arjay Walter B. Vargas</p>
+  <p>Sex: Male</p>
+  <p>Address:  Zone 6, San Benito, Goa Camarines Sur</p>
+  <p>Course, Year & Section: BSIT-2D</p>
+  <p>School: Partido State University</p>
+  <p>Semester & AY: 2nd Semester, AY 2025-2026</p>
+  <p>Subject Code & Title: Event Driven Programming</p>
+  <p>Instructor: Arjay F. Abio</p>
+</div>
+
+<div class="section">
+
+  <h3>Interactive DOM Traversal</h3>
+
+  <div class="buttons">
+    <button class="nav-btn" onclick="goDown()">Down</button>
+    <button class="nav-btn" onclick="goUp()">Up</button>
+    <button class="nav-btn" onclick="nextSibling()">Next</button>
+    <button class="nav-btn" onclick="prevSibling()">Previous</button>
+
+    <button class="add-btn" onclick="addChild()">Add</button>
+    <button class="delete-btn" onclick="deleteNode()">Delete</button>
+  </div>
+
+  <div class="grandparent">
+    Grandparent
+
+    <div class="parent">
+      Parent 1
+      <div class="child">Child 1</div>
+      <div class="child">Child 2</div>
+    </div>
+
+    <div class="parent">
+      Parent 2
+      <div class="child">Child 3</div>
+      <div class="child">Child 4</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+let selected = null;
+
+// SELECT
+document.querySelectorAll('.grandparent, .parent, .child')
+.forEach(node => 
+{
+  node.addEventListener('click', function(e) 
+  {
+    e.stopPropagation();
+
+    if (selected) selected.classList.remove('highlight');
+
+    selected = this;
+    selected.classList.add('highlight');
+  });
+});
+
+// CHANGE
+function changeSelection(node) 
+{
+  if (selected) selected.classList.remove('highlight');
+  selected = node;
+  selected.classList.add('highlight');
+}
+
+// TRAVERSAL
+function goDown() 
+{
+  if (selected && selected.children.length > 0)
+    changeSelection(selected.children[0]);
+}
+
+function goUp() 
+{
+  if (selected && selected.parentElement &&
+      (selected.parentElement.classList.contains("parent") ||
+       selected.parentElement.classList.contains("grandparent")))
+    changeSelection(selected.parentElement);
+}
+
+function nextSibling() 
+{
+  if (selected && selected.nextElementSibling)
+    changeSelection(selected.nextElementSibling);
+}
+
+function prevSibling() 
+{
+  if (selected && selected.previousElementSibling)
+    changeSelection(selected.previousElementSibling);
+}
+
+// ADD
+function addChild() 
+{
+  if (!selected) return;
+
+  if (selected.classList.contains("grandparent")) 
+  {
+    let parent = document.createElement("div");
+    parent.className = "parent";
+    parent.innerText = "New Parent";
+
+    let c1 = document.createElement("div");
+    c1.className = "child";
+    c1.innerText = "Child";
+
+    let c2 = document.createElement("div");
+    c2.className = "child";
+    c2.innerText = "Child";
+
+    parent.appendChild(c1);
+    parent.appendChild(c2);
+    selected.appendChild(parent);
+
+    addClick(parent); addClick(c1); addClick(c2);
+  }
+
+  else if (selected.classList.contains("parent")) 
+  {
+    let child = document.createElement("div");
+    child.className = "child";
+    child.innerText = "New Child";
+
+    selected.appendChild(child);
+    addClick(child);
+  }
+
+  else 
+  {
+    alert("Cannot add child to a child node!");
+  }
+}
+
+// DELETE
+function deleteNode() 
+{
+  if (!selected) return;
+
+  if (selected.classList.contains("grandparent")) 
+  {
+    alert("Cannot delete the grandparent!");
+    return;
+  }
+
+  selected.remove();
+  selected = null;
+}
+
+// CLICK FOR NEW NODES
+function addClick(node) 
+{
+  node.addEventListener('click', function(e) 
+  {
+    e.stopPropagation();
+
+    if (selected) selected.classList.remove('highlight');
+
+    selected = this;
+    selected.classList.add('highlight');
+  });
+}
+</script>
+
+</body>
+</html>
