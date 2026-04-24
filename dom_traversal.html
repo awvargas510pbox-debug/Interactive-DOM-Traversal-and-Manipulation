@@ -12,7 +12,6 @@ body
   margin: 0;
 }
 
-/* HEADER */
 .header 
 {
   background-color: black;
@@ -21,7 +20,6 @@ body
   margin: 20px;
 }
 
-/* SECTIONS */
 .section 
 {
   background-color: orange;
@@ -30,7 +28,6 @@ body
   margin: 20px;
 }
 
-/* TREE */
 .grandparent 
 {
   background: lightblue;
@@ -51,13 +48,11 @@ body
   padding: 5px;
 }
 
-/* HIGHLIGHT */
 .highlight 
 {
   border: 3px solid black;
 }
 
-/* BUTTONS */
 .buttons 
 {
   margin-bottom: 15px;
@@ -147,7 +142,6 @@ button:hover
 <script>
 let selected = null;
 
-// SELECT
 document.querySelectorAll('.grandparent, .parent, .child')
 .forEach(node => 
 {
@@ -162,7 +156,6 @@ document.querySelectorAll('.grandparent, .parent, .child')
   });
 });
 
-// CHANGE
 function changeSelection(node) 
 {
   if (selected) selected.classList.remove('highlight');
@@ -170,7 +163,6 @@ function changeSelection(node)
   selected.classList.add('highlight');
 }
 
-// TRAVERSAL
 function goDown() 
 {
   if (selected && selected.children.length > 0)
@@ -197,7 +189,6 @@ function prevSibling()
     changeSelection(selected.previousElementSibling);
 }
 
-// ADD
 function addChild() 
 {
   if (!selected) return;
@@ -239,7 +230,6 @@ function addChild()
   }
 }
 
-// DELETE
 function deleteNode() 
 {
   if (!selected) return;
@@ -254,7 +244,6 @@ function deleteNode()
   selected = null;
 }
 
-// CLICK FOR NEW NODES
 function addClick(node) 
 {
   node.addEventListener('click', function(e) 
